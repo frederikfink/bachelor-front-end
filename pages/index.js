@@ -8,11 +8,14 @@ export default function Home() {
 
   return (
 
-    <div className={styles.container}>
+    <div className="">
       <Header />
-      <main className={styles.main}>
+      <div class="flex items-center	">
         <Graph data={data} />
-      </main>
+        <h1 className="text-4xl">
+          Explore the transactional network of your favorite <span className="font-size-22 text-blue-600">Ethereum ERC-721</span> tokens
+        </h1>
+      </div>
     </div>
   )
 
