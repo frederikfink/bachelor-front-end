@@ -17,7 +17,7 @@ const Graph = ({ data }) => {
     },[])
 
     return (
-        <svg ref={svgRef} style={{ background: "#ddd"}} />
+        <svg ref={svgRef}/>
     )
 }
 

@@ -50,7 +50,7 @@ export function forceGraph(
     nodeGroups, // an array of ordinal values representing the node groups
     nodeTitle, // given d in nodes, a title string
     nodeFill = "currentColor", // node stroke fill (if not using a group color encoding)
-    nodeStroke = "#fff", // node stroke color
+    nodeStroke = "blue", // node stroke color
     nodeStrokeWidth = 1.5, // node stroke width, in pixels
     nodeStrokeOpacity = 1, // node stroke opacity
     nodeRadius = 50, // node radius, in pixels
@@ -63,7 +63,7 @@ export function forceGraph(
     linkStrokeLinecap = "round", // link stroke linecap
     linkStrength,
     linkDistance = 20,
-    colors = ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"], // an array of color strings, for the node groups
+    colors = ["#000"], // an array of color strings, for the node groups
     width = 640, // outer width, in pixels
     height = 400, // outer height, in pixels
     invalidation, // when this promise resolves, stop the simulation
