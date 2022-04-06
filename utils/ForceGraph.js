@@ -116,7 +116,7 @@ export function forceGraph(
 
   const link = svg
     .append("g")
-    .attr("stroke", linkStroke)
+    .attr("stroke", "#cfcfcf")
     .attr("stroke-opacity", linkStrokeOpacity)
     .attr(
       "stroke-width",
@@ -139,10 +139,9 @@ export function forceGraph(
   const node = container
     .append("circle")
     .attr("fill", nodeFill)
-    .attr("stroke", nodeStroke)
-    .attr("stroke-opacity", nodeStrokeOpacity)
-    .attr("stroke-width", nodeStrokeWidth)
-    .attr("r", (d) => (2.5 * nodeRadius) / d.group)
+    .attr("stroke", "#fff")
+    .attr("stroke-width", 0.5)
+    .attr("r", 3)
   
   if (W) link.attr("stroke-width", ({ index: i }) => W[i]);
   if (G) node.attr("fill", ({ index: i }) => color(G[i]));
