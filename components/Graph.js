@@ -17,7 +17,7 @@ const Graph = ({ data }) => {
     },[])
 
     return (
-        <svg ref={svgRef}/>
+        <svg className="border rounded-lg m-auto my-5" ref={svgRef}/>
     )
 }
 
