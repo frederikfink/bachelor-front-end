@@ -20,22 +20,22 @@ const Header = () => {
 
         if (currentTheme === "dark") {
             return (
-                <SunIcon className="w-10 h-10 text-yellow-500 " role="button" onClick={() => setTheme('light')} />
+                <SunIcon className="w-5 h-5 " role="button" onClick={() => setTheme('light')} />
             )
         }
 
         else {
             return (
-                <MoonIcon className="w-10 h-10 text-gray-900 " role="button" onClick={() => setTheme('dark')} />
+                <MoonIcon className="w-5 h-5 text-gray-900 " role="button" onClick={() => setTheme('dark')} />
             )
         }
     };
 
     return (
-        <header className="h-15 border-b-1 backdrop-blur-md backdrop-brightness-150">
-            <div className="container px-4 sm:px-6 py-4 flex justify-between items-center">
+        <header className="fixed border-b-1 h-16 w-screen z-50 border-b backdrop-blur bg-white/30 dark:bg-black/30">
+            <div className="flex justify-between container m-auto items-center align-center h-full px-12">
+                trust-scan
                 {renderThemeChanger()}
-                hej
             </div>
         </header>
     );

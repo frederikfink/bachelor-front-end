@@ -1,37 +1,40 @@
 // import dynamic from "next/dynamic";
-import React, { useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import ForceGraph3D, { ForceGraph2D, ForceGraphMethods } from "react-force-graph";
-import data from "../data/data";
+import data from "../data/data5";
+import NodeInfoBox from "./nodeInfoBox";
 
-// const _ForceGraph3D = dynamic(() => import("react-force-graph-3d"), {
-// ssr: false
-// });
-/*
-const ForwardGraph3D = forwardRef(
-  (props: ForceGraphProps, ref: MutableRefObject<ForceGraphMethods>) => (
-    <ForceGraph3D {...props} ref={ref} />
-  )
-);
-*/
+
 const FocusGraph = () => {
-  const fgRef = useRef();
 
-  const handleClick = useCallback(
-    (node) => {
-      console.log(node.id);
-    },
-    [fgRef]
-  );
+  const fgRef = useRef();
+  const [clickHistory, setClickHistory] = useState([])
 
   return (
-    <ForceGraph2D
-      ref={fgRef}
-      graphData={data}
-      nodeLabel="id"
-      nodeAutoColorBy="group"
-      linkDirectionalArrowLength={2}
-      onNodeClick={handleClick}
-    />
+    <div>
+      <NodeInfoBox
+        clickHistory={clickHistory}
+      />
+
+      <ForceGraph2D className="fixed top-0"
+        linkWidth={link => link.weight}
+        linkColor={link => 'rgba(0,0,0,' + link.weight / 10 + ')'}
+        nodeColor={node => '#cfcfcf'}
+        nodeStr
+        d3Force="charge"
+        ref={fgRef}
+        graphData={data}
+        nodeLabel="id"
+        linkLabel="id"
+        nodeAutoColorBy="group"
+        onNodeClick={(node) => {
+          setClickHistory(clickHistory => [...clickHistory, { type: 'node', item: node }]);
+        }}
+        onLinkClick={(link) => {
+          setClickHistory(clickHistory => [...clickHistory, { type: 'link', item: link }]);
+        }}
+      />
+    </div>
   );
 };
 
