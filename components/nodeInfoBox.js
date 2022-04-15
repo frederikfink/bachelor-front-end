@@ -1,54 +1,78 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
-const NodeInfoBox = ({ clickHistory }) => {
+const NodeInfoBox = ({ clickHistory, clicked }) => {
 
-    const [clickedData, setClickedData] = useState(null);
+    const [clickedData, setClickedData] = useState(clicked);
+    const [loading, setLoading] = useState(true);
 
     // remove first (dequeue) element if history is greater than 10
     if (clickHistory.length > 10) clickHistory.shift();
 
     // don't add element if element last element is the same as current element
     if (clickHistory.length > 1) {
-        if (clickHistory[clickHistory.length - 2].item.id === clickHistory[clickHistory.length - 1].item.id) {
+        if (clickHistory[clickHistory.length - 2].id === clickHistory[clickHistory.length - 1].id) {
             clickHistory.pop();
         }
     }
 
-    let url = 'https://api.etherscan.io/api?module=account&action=txlist&address=0xddbd2b932c763ba5b1b7ae3b362eac3e8d40121a&startblock=0&endblock=99999999&page=1&offset=10&sort=asc';
-
     useEffect(() => {
-        // GET request using fetch inside useEffect React hook
-        fetch(url)
-            .then(response => response.json())
-            .then(data => setClickedData(data));
-    
-    // empty dependency array means this effect will only run once (like componentDidMount in classes)
-    }, []);
 
-    console.log(clickedData);
+        let nodeUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${clicked.id}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=J4UVR19GT6N4PYXCMMNER453V97U94UI4X`;
+        let linkUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${clicked.id}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=J4UVR19GT6N4PYXCMMNER453V97U94UI4X`;
+        let url = clicked.type == 'link' ? linkUrl : nodeUrl;
+
+        async function fetchMyAPI() {
+            setLoading(true);
+            const response = await (fetch(url));
+            const data = await response.json();
+            setClickedData(data);
+            setLoading(false);
+        };
+
+        fetchMyAPI();
+
+    }, [clicked]);
 
 
     return (
-        <div className="hidden lg:block fixed z-20 inset-0 top-16 m-4 right-auto w-96 pb-10 px-8 overflow-y-auto backdrop-blur bg-white/30 dark:bg-black/30 border rounded ">
+        <div className="flex-col lg:block fixed z-20 inset-0 top-16 m-4 right-auto w-96 pb-10 overflow-y-auto backdrop-blur bg-white/30 dark:bg-black/30 border rounded ">
             <ul className="">
                 {clickHistory.map((elem, i) => (
-                    <li key={`${elem.item.id}-${i}`} >
+                    <li key={`${elem.id}-${i}`} >
                         {clickHistory.length - 1 === i ? (
-                            <a
-                                className="whitespace-nowrap text-xs font-mono text-orange-400 text-ellipsis overflow-hidden"
-                                href={`https://etherscan.io/${elem.type == 'link' ? 'tx' : 'address'}/${elem.item.id}`}
+                            <p
+                                className="whitespace-nowrap text-xs font-mono text-green-400 text-ellipsis overflow-hidden"
+                                href={`https://etherscan.io/${elem.type == 'link' ? 'tx' : 'address'}/${elem.id}`}
                                 target="_blank"
-                            >{elem.type + " -> " + elem.item.id}</a>
+                            >{elem.type + " -> " + elem.id}</p>
                         ) : (
-                            <a
+                            <p
                                 className="whitespace-nowrap text-xs font-mono"
-                                href={`https://etherscan.io/${elem.type == 'link' ? 'tx' : 'address'}/${elem.item.id}`}
+                                href={`https://etherscan.io/${elem.type == 'link' ? 'tx' : 'address'}/${elem.id}`}
                                 target="_blank"
-                            >{elem.type + " -> " + elem.item.id} </a>
+                            >{elem.type + " -> " + elem.id} </p>
                         )
                         }
                     </li>
                 ))}
+            </ul>
+            <ul>
+
+                {loading ? (
+                    <div className="m-auto">
+                        <svg role="status" className="inline mr-2 w-40 h-40 text-gray-200 animate-spin dark:text-gray-600 fill-yellow-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                        </svg>
+                    </div>
+                ) : ''}
+                {clickedData.status == 1 ? (
+                    clickedData.result.map((item, i) => (
+                        <li key={item.hash}>
+                            <p>{item.value}</p>
+                        </li>
+                    ))
+                ) : (<p>not ok</p>)}
             </ul>
         </div>
     );

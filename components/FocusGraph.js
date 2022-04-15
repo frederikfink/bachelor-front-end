@@ -9,10 +9,12 @@ const FocusGraph = () => {
 
   const fgRef = useRef();
   const [clickHistory, setClickHistory] = useState([])
+  const [clicked, setClicked] = useState([])
 
   return (
     <div>
       <NodeInfoBox
+        clicked={clicked}
         clickHistory={clickHistory}
       />
 
@@ -28,10 +30,14 @@ const FocusGraph = () => {
         linkLabel="id"
         nodeAutoColorBy="group"
         onNodeClick={(node) => {
-          setClickHistory(clickHistory => [...clickHistory, { type: 'node', item: node }]);
+          node.type = 'node'
+          setClicked(node)
+          setClickHistory(clickHistory => [...clickHistory, node]);
         }}
         onLinkClick={(link) => {
-          setClickHistory(clickHistory => [...clickHistory, { type: 'link', item: link }]);
+          link.type = 'link'
+          setClicked(link)
+          setClickHistory(clickHistory => [...clickHistory, link]);
         }}
       />
     </div>
