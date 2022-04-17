@@ -4,6 +4,7 @@ import Graph from "../components/Graph"
 import Header from '../components/Header'
 import data from "../data/data.json"
 import FocusGraph from "../components/FocusGraphWrapper";
+import Table from '../components/Table';
 
 export default function Home() {
 
@@ -11,7 +12,9 @@ export default function Home() {
 
     <div className="w-100 min-h-screen">
       <Header />
-      <FocusGraph className="fixed"/>
+      <div className="h-24"></div>
+      <Table />
+      {/* <FocusGraph className="fixed"/> */}
     </div>
 
   )
