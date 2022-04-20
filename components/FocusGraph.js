@@ -1,6 +1,6 @@
 // import dynamic from "next/dynamic";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import ForceGraph3D, { ForceGraph2D, ForceGraphMethods } from "react-force-graph";
+import ForceGraph, { ForceGraph2D, ForceGraph3D, ForceGraphMethods } from "react-force-graph";
 import data from "../data/data5";
 import NodeInfoBox from "./nodeInfoBox";
 
@@ -18,17 +18,19 @@ const FocusGraph = () => {
         clickHistory={clickHistory}
       />
 
-      <ForceGraph2D className="fixed top-0"
+      <ForceGraph3D className="fixed top-0"
         linkWidth={link => link.weight}
-        linkColor={link => 'rgba(0,0,0,' + link.weight / 10 + ')'}
+        linkColor={link => 'rgba(255,0,0,1)'}
         nodeColor={node => '#cfcfcf'}
         nodeStr
         d3Force="charge"
         ref={fgRef}
         graphData={data}
         nodeLabel="id"
+        
         linkLabel="id"
         nodeAutoColorBy="group"
+        backgroundColor="white"
         onNodeClick={(node) => {
           node.type = 'node'
           setClicked(node)
