@@ -33,7 +33,7 @@ const Table = () => {
     const submitCollection = async () => {
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/collection/add', {
+            const response = await fetch('http://127.0.0.1:5000/collection/', {
                 method: 'POST',
                 body: JSON.stringify({ collection }),
                 headers: {
@@ -78,7 +78,7 @@ const Table = () => {
                                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                         <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">Add collection</h3>
                                         <div className="mt-2">
-                                            <p className="text-sm text-gray-500">Add a collection to the list of collections. paste in a valid contract address as shown below <span className="font-mono text-xs">0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D</span></p>
+                                            <p className="text-sm text-gray-500">Add a collection to the list of collections. paste in a valid ERC-721 smart contract address below<br />ex. <span className="font-mono text-xs">0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D</span></p>
                                         </div>
                                         <input onChange={(e) => { handleContractChange(e.target.value) }} className="w-full mt-4 border-b focus:ring-0 outline-0 font-mono dark:bg-white dark:text-black text-sm" placeholder="contract address goes here..."></input>
                                     </div>
@@ -130,7 +130,7 @@ const Table = () => {
                                         {i + 1}
                                     </th>
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                        <Link href={`/collection/${elem.contract_address}`}>
+                                        <Link href={`/collection/${elem.contract_address}/tokens`}>
                                             <span className="cursor-pointer">
                                                 {elem.name} <br />
                                                 <span className="font-normal text-gray-700">{elem.contract_address}</span>
