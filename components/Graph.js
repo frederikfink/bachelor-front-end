@@ -3,7 +3,7 @@ import { forceGraph } from "../utils/ForceGraph"
 
 const Graph = ({ data }) => {
     let svgRef = useRef(null)
-
+    
     useEffect(() => {
       forceGraph(data, {
         svgEl: svgRef.current,

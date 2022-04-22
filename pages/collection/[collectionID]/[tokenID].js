@@ -14,7 +14,7 @@ const collection = () => {
 
     return (
         <div>
-            token graph
+            <FocusGraph />
         </div>
     );
 }
