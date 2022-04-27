@@ -31,8 +31,6 @@ const collection = () => {
 
             const result = await response.json()
 
-            console.log(result)
-
             result.links.sort((a, b) => (a.block < b.block) ? 1 : -1)
 
 

@@ -2,7 +2,6 @@
 // Importing useRouter()
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from "react";
-import Link from 'next/link'
 
 import Header from '../../../components/Header'
 import Table from '../../../components/Table';
@@ -19,8 +18,10 @@ const All = () => {
             'Content-Type': 'application/json'
           }
         });
+
+        console.log(response);
   
-        setData(await response.json(data));
+        // setData(await response.json(data));
   
       } catch (error) {
         console.log(error);
