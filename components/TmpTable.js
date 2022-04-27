@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Tooltip } from "./Tooltip";
 
 
-const Table = ({tableTitle, collectionData}) => {
+const TmpTable = ({tableTitle, collectionData}) => {
     
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -153,4 +153,4 @@ const Table = ({tableTitle, collectionData}) => {
     )
 };
 
-export default Table;
+export default TmpTable;
