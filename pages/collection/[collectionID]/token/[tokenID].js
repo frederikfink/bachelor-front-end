@@ -100,7 +100,7 @@ const collection = () => {
                     <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
                 </div>
                 <div className="flex 3">
-                    <div className="border border-gray-800 flex-fill w-100 flex-1 border-l rounded-l-lg overflow-auto px-4 py-2">
+                    <div className="border border-gray-800 flex-fill w-100 flex-1 border-l rounded-l-lg overflow-auto force-500px-height px-4 py-2">
                         {data.nodes.map((item) => (
                             <li className="text-gray-500 flex justify-between" key={item.id}>
                                 <a target={"_BLANK"} href={`https://etherscan.io/address/${item.id}`}>0x{item.id.substring(0, 3)}...{item.id.substring(item.id.length - 3)}</a>
@@ -111,7 +111,7 @@ const collection = () => {
                     {/* <button className="border p-3 rounded border-yellow-500 " onClick={testAction}>click me!</button> */}
                     <FocusGraph data={data} />
                 </div>
-                <div className="flex gap-4 justify-between w-100">
+                <div className="flex gap-4 mt-4 justify-between w-100">
                     <div>
                         <p className="-mb-1">Transfers</p>
                         <p className="font-bold">192</p>
