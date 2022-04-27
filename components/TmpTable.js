@@ -1,20 +1,61 @@
 import React, { useState, useEffect } from "react";
+import Image from 'next/image'
 import Link from 'next/link'
 import { Tooltip } from "./Tooltip";
 
 
 const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [collection, setCollection] = useState('');
     const [modalActive, setModalActive] = useState(false);
     const [isDisabled, setDisabled] = useState(true);
 
+    const [openseaData, setOpenseaData] = useState({});
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+
+            try {
+                console.log(collectionID);
+                const response = await fetch(`https://api.opensea.io/api/v1/asset_contract/${collectionID}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // let result = await response.json();
+                // setOpenseaData(JSON.parse(JSON.stringify(result)));
+
+                setOpenseaData(await response.json());
+
+            } catch (error) {
+                console.log(error);
+            }
+
+            setIsLoading(false);
+        };
+
+        if (!collectionID) return;
+
+        fetchData();
+    }, [collectionID]);
+
+    console.log(openseaData);
+    
     return (
         <>
-            <div className="flex">
-                <h1 className="text-xl font-semibold">{tableTitle}</h1>
+            <div className="flex mb-4">
+                <div className="flex items-center">
+                    <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
+                    <div>
+                        <h1 className="text-xl font-semibold">{openseaData.name}</h1>
+                        <p className="text-gray-700 dark:text-gray-400">{tableTitle}</p>
+                    </div>
+                </div>
             </div>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

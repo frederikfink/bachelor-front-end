@@ -2,6 +2,7 @@
 // Importing useRouter()
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from "react";
+import NextBreadcrumbs from '../../../components/BreadCrumps';
 
 import Header from '../../../components/Header'
 import Table from '../../../components/Table';
@@ -18,10 +19,8 @@ const All = () => {
             'Content-Type': 'application/json'
           }
         });
-
-        console.log(response);
   
-        // setData(await response.json(data));
+        setData(await response.json(data));
   
       } catch (error) {
         console.log(error);
@@ -38,8 +37,8 @@ const All = () => {
     return (
         <>
         <Header />
+        <NextBreadcrumbs />
         <div className="container m-auto">
-          <div className="h-24"></div>
           <div className="flex content-between w-100">
             <p className="text-gray-700 dark:text-gray-400">NFT collections</p>
           </div>

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from "react";
 import TmpTable from '../../../components/TmpTable';
 import Header from '../../../components/Header'
+import NextBreadcrumbs from '../../../components/BreadCrumps';
 
 const All = () => {
 
@@ -25,9 +26,6 @@ const All = () => {
 
       setData(await response.json(data));
 
-      console.log(data);
-
-
     } catch (error) {
       console.log(error);
     }
@@ -41,12 +39,9 @@ const All = () => {
   return (
     <>
       <Header />
+      <NextBreadcrumbs />
       <div className="container m-auto">
-        <div className="h-24"></div>
-        <div className="flex content-between w-100">
-          <p className="text-gray-700 dark:text-gray-400">NFT collections</p>
-        </div>
-        <TmpTable tableTitle={`Collection: ${collectionID}`} collectionData={data} collectionID={collectionID}/>
+        <TmpTable tableTitle={collectionID} collectionData={data} collectionID={collectionID}/>
       </div>
     </>
   );

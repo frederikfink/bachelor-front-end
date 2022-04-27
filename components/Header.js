@@ -32,12 +32,15 @@ const Header = () => {
     };
 
     return (
+        <>
         <header className="fixed border-b-1 h-16 w-screen z-40 border-b backdrop-blur bg-white/30 dark:bg-black/30">
             <div className="flex justify-between container m-auto items-center align-center h-full px-12">
                 trust-scan
                 {renderThemeChanger()}
             </div>
         </header>
+        <div className="h-24 spaceer"></div>
+        </>
     );
 };
 
