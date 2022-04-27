@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Tooltip } from "./Tooltip";
 
 
-const Table = () => {
-
+const Table = ({myTitle}) => {
+    
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [data, setData] = useState([]);
@@ -102,7 +102,7 @@ const Table = () => {
             ) :
                 ('')}
             <div className="flex">
-                <p>All collections</p>
+                <h1 className="text-xl font-semibold">{myTitle}</h1>
                 <div className="ml-auto mb-4">
                     <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={() => setModalActive(true)}>Add collection</button>
                 </div>

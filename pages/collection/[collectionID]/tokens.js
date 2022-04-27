@@ -3,12 +3,15 @@ import Table from '../../../components/Table';
 
 export default function Test() {
 
-    const router = useRouter()
+  const router = useRouter()
 
-    return (
-  
+  return (
+    <div className="container m-auto">
+
       <Table />
-  
-    )
-  
-  }
+
+    </div>
+
+  )
+
+}

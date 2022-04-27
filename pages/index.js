@@ -18,7 +18,7 @@ export default function Home() {
           <p>NFT collections</p>
           <p className="ml-auto">search</p>
         </div>
-        <Table />
+        <Table myTitle={"All availabled collections"}/>
       </div>
     </div>
 
