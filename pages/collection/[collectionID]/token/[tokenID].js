@@ -79,17 +79,12 @@ const collection = () => {
 
     return (
         <>
-        <Header />
-        <NextBreadcrumbs />
-        <div className="h-24"></div>
-        <div className="container m-auto">
-            <div className="flex items-center">
-                go back
-                <h1 className="text-xl font-mono ml-2">{collectionID} | <span className="text-xl font-mono font-bold">{tokenID}</span></h1>
-            </div>
+            <Header />
+            <NextBreadcrumbs />
+            <div className="container m-auto">
+                <h1 className="text-xl mb-4 font-mono">{collectionID} | <span className="text-xl font-mono font-bold">{tokenID}</span></h1>
 
-            <div className="grid grid-cols-3 items-center gap-4">
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center gap-4 mb-4">
                     <button onClick={startAnimation} type="button" className="w-full inline-flex items-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">
                         {animationRunning ? (
                             <>
@@ -104,8 +99,19 @@ const collection = () => {
                     </button>
                     <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
                 </div>
-
-                <div className="flex col-span-2 gap-8 justify-between">
+                <div className="flex 3">
+                    <div className="border border-gray-800 flex-fill w-100 flex-1 border-l rounded-l-lg overflow-auto px-4 py-2">
+                        {data.nodes.map((item) => (
+                            <li className="text-gray-500 flex justify-between" key={item.id}>
+                                <a target={"_BLANK"} href={`https://etherscan.io/address/${item.id}`}>0x{item.id.substring(0, 3)}...{item.id.substring(item.id.length - 3)}</a>
+                                <p>20-20-2022</p>
+                            </li>
+                        ))}
+                    </div>
+                    {/* <button className="border p-3 rounded border-yellow-500 " onClick={testAction}>click me!</button> */}
+                    <FocusGraph data={data} />
+                </div>
+                <div className="flex gap-4 justify-between w-100">
                     <div>
                         <p className="-mb-1">Transfers</p>
                         <p className="font-bold">192</p>
@@ -130,22 +136,8 @@ const collection = () => {
                         <p className="-mb-1">Median blocks between transfers</p>
                         <p className="font-bold">1400</p>
                     </div>
-
                 </div>
             </div>
-            <div className="grid gap-0 grid-cols-3">
-                <div className="border border-gray-800 border-l rounded-l-lg overflow-auto left-side-test px-4 py-2">
-                    {data.nodes.map((item) => (
-                        <li className="text-gray-500 flex justify-between" key={item.id}>
-                            <a target={"_BLANK"} href={`https://etherscan.io/address/${item.id}`}>0x{item.id.substring(0, 3)}...{item.id.substring(item.id.length - 3)}</a>
-                            <p>20-20-2022</p>
-                        </li>
-                    ))}
-                </div>
-                {/* <button className="border p-3 rounded border-yellow-500 " onClick={testAction}>click me!</button> */}
-                <FocusGraph data={data} />
-            </div>
-        </div>
         </>
     );
 }

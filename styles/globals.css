@@ -23,6 +23,10 @@ canvas {
   @apply border-gray-800 border border-l-0 border-r rounded-r-lg ;
 }
 
+.force-1280px-width {
+  width: 1200px;
+}
+
 .left-side-test {
   height: 500px;
 }
