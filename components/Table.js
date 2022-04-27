@@ -3,34 +3,33 @@ import Link from 'next/link'
 import { Tooltip } from "./Tooltip";
 
 
-const Table = ({myTitle}) => {
+const Table = ({tableTitle, collectionData}) => {
     
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
-    const [data, setData] = useState([]);
     const [collection, setCollection] = useState('');
     const [modalActive, setModalActive] = useState(false);
     const [isDisabled, setDisabled] = useState(true);
 
-    const fetchData = async () => {
-        try {
-            const response = await fetch('http://127.0.0.1:5000/collection/all', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+    // const fetchData = async () => {
+    //     try {
+    //         const response = await fetch('http://127.0.0.1:5000/collection/all', {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
 
-            setData(await response.json(data));
+    //         setData(await response.json(data));
 
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
 
     const submitCollection = async () => {
 
@@ -102,7 +101,7 @@ const Table = ({myTitle}) => {
             ) :
                 ('')}
             <div className="flex">
-                <h1 className="text-xl font-semibold">{myTitle}</h1>
+                <h1 className="text-xl font-semibold">{tableTitle}</h1>
                 <div className="ml-auto mb-4">
                     <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={() => setModalActive(true)}>Add collection</button>
                 </div>
@@ -126,7 +125,7 @@ const Table = ({myTitle}) => {
                         <div>loading</div>
                     ) : (
                         <tbody>
-                            {data.map((elem, i) => (
+                            {collectionData.map((elem, i) => (
                                 <tr key={elem.contract_address} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                         {i + 1}
