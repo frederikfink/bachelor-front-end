@@ -7,6 +7,7 @@ import FocusGraph from "../../../../components/FocusGraphWrapper";
 import Header from '../../../../components/Header';
 import { link } from 'd3';
 import { timeout } from 'd3';
+import NextBreadcrumbs from '../../../../components/BreadCrumps';
 
 const collection = () => {
 
@@ -78,7 +79,8 @@ const collection = () => {
 
     return (
         <>
-        <Header></Header>
+        <Header />
+        <NextBreadcrumbs />
         <div className="h-24"></div>
         <div className="container m-auto">
             <div className="flex items-center">

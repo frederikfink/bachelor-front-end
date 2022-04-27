@@ -10,6 +10,11 @@ module.exports = {
         destination: '/collection/all',
         permanent: true,
       },
+      {
+        source: '/collection/:collectionID/token',
+        destination: '/collection/:collectionID',
+        permanent: true,
+      },
     ]
   },
 
