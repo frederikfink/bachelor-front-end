@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/router'
-import FocusGraph from "../../../components/FocusGraphWrapper";
-import Header from '../../../components/Header';
+import FocusGraph from "../../../../components/FocusGraphWrapper";
+import Header from '../../../../components/Header';
 import { link } from 'd3';
 import { timeout } from 'd3';
 
@@ -79,6 +79,9 @@ const collection = () => {
     }
 
     return (
+        <>
+        <Header></Header>
+        <div className="h-24"></div>
         <div className="container m-auto">
             <div className="flex items-center">
                 go back
@@ -143,6 +146,7 @@ const collection = () => {
                 <FocusGraph data={data} />
             </div>
         </div>
+        </>
     );
 }
 

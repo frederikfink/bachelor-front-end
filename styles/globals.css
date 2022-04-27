@@ -20,7 +20,7 @@ a {
 }
 
 canvas {
-  @apply border-gray-800 border border-l-0 border-r rounded-r-lg;
+  @apply border-gray-800 border border-l-0 border-r rounded-r-lg ;
 }
 
 .left-side-test {
