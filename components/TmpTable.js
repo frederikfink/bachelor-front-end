@@ -29,6 +29,9 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
                             <th scope="col" className="px-6 py-3">
                                 avg. transfer speed
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                cycles
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +48,10 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
                                     {elem.count}
                                 </th>
                                 <td className="px-6 py-4">
-                                    something something
+                                    placeholder
+                                </td>
+                                <td className="px-6 py-4">
+                                    placeholder
                                 </td>
                             </tr>
                         ))}
