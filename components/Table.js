@@ -7,23 +7,25 @@ const Table = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
-    const [data, setfetchData] = useState([]);
+    const [data, setData] = useState([]);
     const [collection, setCollection] = useState('');
     const [modalActive, setModalActive] = useState(false);
     const [isDisabled, setDisabled] = useState(true);
 
-    const fetchData = () => {
-        fetch('http://127.0.0.1:5000/collection/all')
-            .then((response) => response.json())
-            .then((data) => {
-                setIsLoading(false);
-                setfetchData(data);
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                setIsError(true);
-                console.log(error);
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/collection/all', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
+
+            setData(await response.json(data));
+
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -92,7 +94,7 @@ const Table = () => {
                                 ) : (
                                     <button onClick={submitCollection} data-tooltip-target="add-contract-tooltip" disabled={isDisabled} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Submit</button>
                                 )}
-                                <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onClick={() => {setModalActive(false); setDisabled(true); setCollection('')}}>Cancel</button>
+                                <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onClick={() => { setModalActive(false); setDisabled(true); setCollection('') }}>Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -125,7 +127,7 @@ const Table = () => {
                     ) : (
                         <tbody>
                             {data.map((elem, i) => (
-                                <tr  key={elem.contract_address} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <tr key={elem.contract_address} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                         {i + 1}
                                     </th>
