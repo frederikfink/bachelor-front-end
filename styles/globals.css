@@ -18,3 +18,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+canvas {
+  @apply border-gray-800 border border-l-0 border-r rounded-r-lg;
+}
+
+.left-side-test {
+  height: 500px;
+}

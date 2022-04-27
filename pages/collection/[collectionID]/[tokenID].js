@@ -13,8 +13,8 @@ const collection = () => {
     const tokenID = router.query.tokenID
 
     return (
-        <div>
-            <FocusGraph />
+        <div className="border-yellow-400">
+            <FocusGraph data/>
         </div>
     );
 }

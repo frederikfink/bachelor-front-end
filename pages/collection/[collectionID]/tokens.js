@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Table from '../../../components/Table';
 
 export default function Test() {
 
@@ -6,9 +7,7 @@ export default function Test() {
 
     return (
   
-      <div>
-        token_list
-      </div>
+      <Table />
   
     )
   

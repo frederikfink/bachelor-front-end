@@ -5,6 +5,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/router'
 import FocusGraph from "../../../components/FocusGraphWrapper";
 import Header from '../../../components/Header';
+import { link } from 'd3';
+import { timeout } from 'd3';
 
 const collection = () => {
 
@@ -13,9 +15,11 @@ const collection = () => {
     const collectionID = router.query.collectionID
     const tokenID = router.query.tokenID
 
-    const [data, setData] = useState([])
+    const [data, setData] = useState({ nodes: [], links: [] })
+    const [animationRunning, setAnimationRunning] = useState(false)
 
-    const testAction = async () => {
+    const startAnimation = async () => {
+        setAnimationRunning(true);
 
         try {
             const response = await fetch(`http://127.0.0.1:5000/collection/${collectionID}/token/${tokenID}`, {
@@ -26,27 +30,119 @@ const collection = () => {
             });
 
             const result = await response.json()
-            console.log(result)
-            setData(result)
 
-            // setData(await response.json())
-            // console.log(response.json())
-            
-            // const data = await response.json(data)
+            console.log(result)
+
+            result.links.sort((a, b) => (a.block < b.block) ? 1 : -1)
+
+
+            const id = setInterval((interval) => {
+                // Add a new connected node every second
+                let link = result.links.pop();
+
+                if (link == undefined) {
+                    console.log("stop here");
+                    setAnimationRunning(false);
+                    return;
+                }
+
+                let from = link.source;
+                let to = link.target;
+
+                setData(({ nodes, links }) => {
+                    if (!(nodes.some(e => e.id === from))) {
+                        nodes = [...nodes, { id: from }];
+                    }
+                    if (!(nodes.some(e => e.id === to))) {
+                        nodes = [...nodes, { id: to }];
+                    }
+
+                    return {
+                        nodes: nodes,
+                        links: [...links, { source: link.source, target: link.target }]
+                    };
+
+
+                });
+
+                return;
+
+            }, 50);
+
 
         } catch (error) {
             console.log(error);
+            setAnimationRunning(false);
+
         }
+
     }
 
     return (
-        <>
-            <p>collection = {collectionID}</p>
-            <p>token = {tokenID}</p>
-            token view
-            <button onClick={testAction}>click me!</button>
-            <FocusGraph data={data} />
-        </>
+        <div className="container m-auto">
+            <div class="flex items-center">
+                go back
+                <h1 className="text-xl font-mono ml-2">{collectionID} | <span className="text-xl font-mono font-bold">{tokenID}</span></h1>
+            </div>
+
+            <div className="grid grid-cols-3 items-center gap-4">
+                <div className="flex justify-between">
+                    <button onClick={startAnimation} type="button" className="w-full inline-flex items-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">
+                        {animationRunning ? (
+                            <>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Running
+                            </>
+                        ) : (
+                            <>Start animation</>
+                        )}
+                    </button>
+                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
+                </div>
+
+                <div className="flex col-span-2 gap-8 justify-between">
+                    <div>
+                        <p className="-mb-1">Transfers</p>
+                        <p className="font-bold">192</p>
+                    </div>
+
+                    <div>
+                        <p className="-mb-1">Unique addresses</p>
+                        <p className="font-bold">24</p>
+                    </div>
+
+                    <div>
+                        <p className="-mb-1">Cycles</p>
+                        <p className="font-bold">6</p>
+                    </div>
+
+                    <div>
+                        <p className="-mb-1">avg blocks between transfers</p>
+                        <p className="font-bold">2000</p>
+                    </div>
+
+                    <div>
+                        <p className="-mb-1">Median blocks between transfers</p>
+                        <p className="font-bold">1400</p>
+                    </div>
+
+                </div>
+            </div>
+            <div className="grid gap-0 grid-cols-3">
+                <div className="border border-gray-800 border-l rounded-l-lg overflow-auto left-side-test px-4 py-2">
+                    {data.nodes.map((item) => (
+                        <li className="text-gray-500 flex justify-between" key={item.id}>
+                            <a target={"_BLANK"} href={`https://etherscan.io/address/${item.id}`}>0x{item.id.substring(0, 3)}...{item.id.substring(item.id.length - 3)}</a>
+                            <p>20-20-2022</p>
+                        </li>
+                    ))}
+                </div>
+                {/* <button className="border p-3 rounded border-yellow-500 " onClick={testAction}>click me!</button> */}
+                <FocusGraph data={data} />
+            </div>
+        </div>
     );
 }
 

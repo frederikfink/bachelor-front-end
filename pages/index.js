@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
 
-    <div className="w-100 min-h-screen">
+    <div className="">
       <Header />
       <div className="container m-auto">
         <div className="h-24"></div>
