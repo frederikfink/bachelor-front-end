@@ -131,7 +131,7 @@ const Table = ({tableTitle, collectionData}) => {
                                         {i + 1}
                                     </th>
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                        <Link href={`/collection/${elem.contract_address}/tokens`}>
+                                        <Link href={`/collection/${elem.contract_address}`}>
                                             <span className="cursor-pointer">
                                                 {elem.name} <br />
                                                 <span className="font-normal text-gray-700">{elem.contract_address}</span>
