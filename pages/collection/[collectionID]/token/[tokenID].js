@@ -175,11 +175,17 @@ const collection = () => {
                                 Running
                             </>
                         ) : (
-                            <>Start animation</>
+                            <>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Start animation
+                            </>
                         )}
                     </button>
                     <div className="relative pt-1">
-                        <label htmlFor="customRange1" className="form-label truncate">Animation speed | {(animationSpeed / 1000).toFixed(2)} s/s</label>
+                        <label htmlFor="customRange1" className="form-label truncate">Animation speed | {(animationSpeed / 1000).toFixed(2)} s/t</label>
                         <input
                             onChange={e => setAnimationSpeed(e.target.value)}
                             type="range"
@@ -198,7 +204,12 @@ const collection = () => {
                             <div className="toggle-bg mt-1 bg-gray-200 border border-gray-400 h-2 w-8 rounded-full"></div>
                         </label>
                     </div>
-                    <button onClick={resetAnimation} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
+                    <button onClick={resetAnimation} type="button" className="w-full inline-flex items-center justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Reset
+                    </button>
 
                 </div>
                 <div className="flex 3">
@@ -243,22 +254,22 @@ const collection = () => {
 
                     <div>
                         <p className="-mb-1">Unique addresses</p>
-                        <p className="font-bold">{stats !== null ? [...new Map(stats.nodes.map(item =>[item.id, item])).values()].length : 'loading...'}</p>
+                        <p className="font-bold">{stats !== null ? [...new Map(stats.nodes.map(item => [item.id, item])).values()].length : 'loading...'}</p>
                     </div>
 
                     <div>
                         <p className="-mb-1">Cycles</p>
-                        <p className="font-bold">6</p>
+                        <p className="font-bold">not implemented</p>
                     </div>
 
                     <div>
                         <p className="-mb-1">avg blocks between transfers</p>
-                        <p className="font-bold">2000</p>
+                        <p className="font-bold">not implemented</p>
                     </div>
 
                     <div>
                         <p className="-mb-1">Median blocks between transfers</p>
-                        <p className="font-bold">1400</p>
+                        <p className="font-bold">not impelemnted</p>
                     </div>
                 </div>
             </div>
