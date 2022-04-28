@@ -47,3 +47,8 @@ input:checked + .toggle-bg:after {
 input:checked + .toggle-bg {
     @apply bg-blue-600 border-blue-500;
 }
+
+.force-120-px {
+  width: 120px;
+  height: 120px;
+}

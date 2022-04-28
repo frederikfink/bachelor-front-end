@@ -1,7 +1,7 @@
 
 // Importing useRouter()
 import Link from 'next/link'
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from 'next/router'
 import FocusGraph from "../../../../components/FocusGraphWrapper";
 import Header from '../../../../components/Header';
@@ -24,8 +24,15 @@ const collection = () => {
     const [dimensionsToggled, setDimensionsToggled] = useState(false)
     const [openseaData, setOpenseaData] = useState({});
 
+    const AlwaysScrollToBottom = () => {
+        const elementRef = useRef();
+        useEffect(() => elementRef.current.scrollIntoView());
+        return <div ref={elementRef} />;
+    };
+
+
     const getShortHash = (val, len, dir) => {
-        if(dir == 'reverse') return val.substring(val.length - len)
+        if (dir == 'reverse') return val.substring(val.length - len)
         else return val.substring(0, len)
     }
 
@@ -103,9 +110,12 @@ const collection = () => {
                         nodes = [...nodes, { id: to }];
                     }
 
+                    let prevBlock = [...links].at(-1) !== undefined ? [...links].at(-1).block : 0
+                    let blockDiff = link.block - prevBlock
+
                     return {
                         nodes: nodes,
-                        links: [...links, { source: link.source, target: link.target, tx: link.tx }]
+                        links: [...links, { source: link.source, target: link.target, tx: link.tx, block: link.block, blockDiff: blockDiff }]
                     };
 
                 });
@@ -133,7 +143,11 @@ const collection = () => {
 
             <div className="container m-auto">
                 <div className="flex items-center">
-                    <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
+                    {openseaData.image_url == undefined ? (
+                        <div className="rounded-lg mr-4 bg-slate-200 force-120-px animate-pulse" />
+                    ): (
+                        <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
+                    )}
                     <div>
                         <h1 className="text-xl font-semibold">{openseaData.name}</h1>
                         <p className="text-gray-700 dark:text-gray-400">{collectionID} | {tokenID}</p>
@@ -177,20 +191,24 @@ const collection = () => {
 
                 </div>
                 <div className="flex 3">
-                    <div className="border border-gray-800 flex-fill w-100 flex-1 border-l rounded-l-lg overflow-auto force-500px-height px-4 py-2">
-                        {data.links.map((item) => (
-                            <li className="text-gray-500 flex justify-between" key={item.tx}>
-                                <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
-                                    tx
-                                </a>
-                                <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
-                                    {item.source.id ? `0x${item.source.id.substring(0, 3)}...${item.target.id.substring(item.source.id.length - 3)}` : ''}
-                                </a>
-                                <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
-                                    {item.target.id ? `0x${item.target.id.substring(0, 3)}...${item.target.id.substring(item.target.id.length - 3)}` : ''}
-                                </a>
-                            </li>
-                        ))}
+                    <div className="border border-gray-800 flex-1 border-l rounded-l-lg overflow-auto force-500px-height px-4 py-2">
+                        <ul>
+                            {data.links.map((item) => (
+                                <li className="text-gray-500 flex justify-between" key={item.tx}>
+                                    <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
+                                        tx
+                                    </a>
+                                    <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
+                                        {item.source.id ? `0x${item.source.id.substring(0, 3)}...${item.target.id.substring(item.source.id.length - 3)}` : ''}
+                                    </a>
+                                    <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
+                                        {item.target.id ? `0x${item.target.id.substring(0, 3)}...${item.target.id.substring(item.target.id.length - 3)}` : ''}
+                                    </a>
+                                    <p>{item.blockDiff}</p>
+                                </li>
+                            ))}
+                            <AlwaysScrollToBottom />
+                        </ul>
                     </div>
                     <FocusGraph data={data} dimensions={dimensions} />
                 </div>
