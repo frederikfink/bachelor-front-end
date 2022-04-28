@@ -30,3 +30,20 @@ canvas {
 .force-500px-height {
   height: 500px;
 }
+
+.toggle-bg {
+  @apply mt-2
+}
+
+.toggle-bg:after {
+    content: '';
+    @apply absolute top-1 -left-1 bg-blue-500 border border-gray-300 rounded-full h-4 w-4 transition shadow-sm;
+}
+
+input:checked + .toggle-bg:after {
+    transform: translateX(150%);
+}
+
+input:checked + .toggle-bg {
+    @apply bg-blue-600 border-blue-500;
+}

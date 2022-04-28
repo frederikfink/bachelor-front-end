@@ -8,6 +8,7 @@ import Header from '../../../../components/Header';
 import { link } from 'd3';
 import { timeout } from 'd3';
 import NextBreadcrumbs from '../../../../components/BreadCrumps';
+import { utcFormat } from 'd3';
 
 const collection = () => {
 
@@ -18,10 +19,26 @@ const collection = () => {
 
     const [data, setData] = useState({ nodes: [], links: [] })
     const [animationRunning, setAnimationRunning] = useState(false)
+    const [animationSpeed, setAnimationSpeed] = useState(50)
+    const [dimensions, setDimensions] = useState(2)
+    const [dimensionsToggled, setDimensionsToggled] = useState(false)
+
+    const toggleDimensions = async () => {
+        if(dimensions == 2) setDimensions(3);
+        else setDimensions(2);
+        setDimensionsToggled(!dimensionsToggled);
+    }
+
+    const resetAnimation = async () => {
+        setData({ nodes: [], links: [] });
+        setAnimationSpeed(50);
+        setDimensions(2);
+        setAnimationRunning(false);
+    }
 
     const startAnimation = async () => {
+        resetAnimation()
         setAnimationRunning(true);
-
         try {
             const response = await fetch(`http://127.0.0.1:5000/collection/${collectionID}/token/${tokenID}`, {
                 method: 'GET',
@@ -40,7 +57,7 @@ const collection = () => {
                 let link = result.links.pop();
 
                 if (link == undefined) {
-                    console.log("stop here");
+                    clearInterval(id);
                     setAnimationRunning(false);
                     return;
                 }
@@ -66,13 +83,12 @@ const collection = () => {
 
                 return;
 
-            }, 50);
+            }, animationSpeed);
 
 
         } catch (error) {
             console.log(error);
             setAnimationRunning(false);
-
         }
 
     }
@@ -81,11 +97,12 @@ const collection = () => {
         <>
             <Header />
             <NextBreadcrumbs />
+
             <div className="container m-auto">
                 <h1 className="text-xl mb-4 font-mono">{collectionID} | <span className="text-xl font-mono font-bold">{tokenID}</span></h1>
 
                 <div className="flex justify-between items-center gap-4 mb-4">
-                    <button onClick={startAnimation} type="button" className="w-full inline-flex items-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">
+                    <button disabled={animationRunning} onClick={startAnimation} type="button" className="inline-flex items-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">
                         {animationRunning ? (
                             <>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -97,7 +114,28 @@ const collection = () => {
                             <>Start animation</>
                         )}
                     </button>
-                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
+                    <div class="relative pt-1">
+                        <label for="customRange1" class="form-label truncate">Animation speed | {(animationSpeed / 1000).toFixed(2)} s/s</label>
+                        <input
+                            onChange={e => setAnimationSpeed(e.target.value)}
+                            type="range"
+                            className="w-full h-6 p-0 focus:outline-none focus:ring-0 focus:shadow-none"
+                            min="50"
+                            max="1000"
+                            step="50"
+                            value={animationSpeed}
+                        />
+                    </div>
+
+                    <div class="pt-1">
+                        <label for="customRange1" class="form-label truncate">Toggle 3D</label>
+                        <label for="toggle-example-checked" class="flex mb-4 items-center cursor-pointer relative">
+                            <input onChange={e => toggleDimensions()} value={dimensionsToggled} type="checkbox" id="toggle-example-checked" class="sr-only" />
+                            <div class="toggle-bg mt-1 bg-gray-200 border border-gray-400 h-2 w-8 rounded-full"></div>
+                            </label>
+                    </div>
+                    <button onClick={resetAnimation} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
+
                 </div>
                 <div className="flex 3">
                     <div className="border border-gray-800 flex-fill w-100 flex-1 border-l rounded-l-lg overflow-auto force-500px-height px-4 py-2">
@@ -108,8 +146,7 @@ const collection = () => {
                             </li>
                         ))}
                     </div>
-                    {/* <button className="border p-3 rounded border-yellow-500 " onClick={testAction}>click me!</button> */}
-                    <FocusGraph data={data} />
+                    <FocusGraph data={data} dimensions={dimensions}/>
                 </div>
                 <div className="flex gap-4 mt-4 justify-between w-100">
                     <div>
