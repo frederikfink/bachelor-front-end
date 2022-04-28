@@ -32,7 +32,6 @@ const collection = () => {
     const resetAnimation = async () => {
         setData({ nodes: [], links: [] });
         setAnimationSpeed(50);
-        setDimensions(2);
         setAnimationRunning(false);
     }
 
