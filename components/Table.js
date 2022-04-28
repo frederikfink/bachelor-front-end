@@ -34,7 +34,7 @@ const Table = ({tableTitle, collectionData}) => {
     const submitCollection = async () => {
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/collection/', {
+            const response = await fetch('http://127.0.0.1:5000/collection/add', {
                 method: 'POST',
                 body: JSON.stringify({ collection }),
                 headers: {

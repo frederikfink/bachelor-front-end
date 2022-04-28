@@ -23,18 +23,13 @@ const collection = () => {
     const [dimensions, setDimensions] = useState(2)
     const [dimensionsToggled, setDimensionsToggled] = useState(false)
     const [openseaData, setOpenseaData] = useState({});
+    const [stats, setStats] = useState(null);
 
     const AlwaysScrollToBottom = () => {
         const elementRef = useRef();
         useEffect(() => elementRef.current.scrollIntoView());
         return <div ref={elementRef} />;
     };
-
-
-    const getShortHash = (val, len, dir) => {
-        if (dir == 'reverse') return val.substring(val.length - len)
-        else return val.substring(0, len)
-    }
 
     const toggleDimensions = async () => {
         if (dimensions == 2) setDimensions(3);
@@ -43,7 +38,6 @@ const collection = () => {
     }
 
     const resetAnimation = async () => {
-        console.log(data);
         setData({ nodes: [], links: [] });
         setAnimationSpeed(50);
         setAnimationRunning(false);
@@ -52,7 +46,6 @@ const collection = () => {
     const fetchData = async () => {
 
         try {
-            console.log(collectionID);
             const response = await fetch(`https://api.opensea.io/api/v1/asset/${collectionID}/${tokenID}/?include_orders=false`, {
                 method: 'GET',
                 headers: {
@@ -60,12 +53,7 @@ const collection = () => {
                 }
             });
 
-            // let result = await response.json();
-            // setOpenseaData(JSON.parse(JSON.stringify(result)));
-
             setOpenseaData(await response.json());
-
-            console.log(openseaData);
 
         } catch (error) {
             console.log(error);
@@ -73,8 +61,24 @@ const collection = () => {
 
     };
 
+    const fetchStats = async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/collection/${collectionID}/token/${tokenID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            setStats(await response.json());
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const startAnimation = async () => {
-        resetAnimation()
+        setData({ nodes: [], links: [] });
         setAnimationRunning(true);
         try {
             const response = await fetch(`http://127.0.0.1:5000/collection/${collectionID}/token/${tokenID}`, {
@@ -138,8 +142,10 @@ const collection = () => {
     }
 
     useEffect(() => {
+        if (!collectionID) return;
         fetchData();
-    }, [collectionID]);
+        fetchStats();
+    }, [collectionID, tokenID]);
 
     return (
         <>
@@ -172,8 +178,8 @@ const collection = () => {
                             <>Start animation</>
                         )}
                     </button>
-                    <div class="relative pt-1">
-                        <label for="customRange1" class="form-label truncate">Animation speed | {(animationSpeed / 1000).toFixed(2)} s/s</label>
+                    <div className="relative pt-1">
+                        <label htmlFor="customRange1" className="form-label truncate">Animation speed | {(animationSpeed / 1000).toFixed(2)} s/s</label>
                         <input
                             onChange={e => setAnimationSpeed(e.target.value)}
                             type="range"
@@ -185,11 +191,11 @@ const collection = () => {
                         />
                     </div>
 
-                    <div class="pt-1">
-                        <label for="customRange1" class="form-label truncate">Toggle 3D</label>
-                        <label for="toggle-example-checked" class="flex mb-4 items-center cursor-pointer relative">
-                            <input onChange={e => toggleDimensions()} value={dimensionsToggled} type="checkbox" id="toggle-example-checked" class="sr-only" />
-                            <div class="toggle-bg mt-1 bg-gray-200 border border-gray-400 h-2 w-8 rounded-full"></div>
+                    <div className="pt-1">
+                        <label htmlFor="customRange1" className="form-label truncate">Toggle 3D</label>
+                        <label htmlFor="toggle-example-checked" className="flex mb-4 items-center cursor-pointer relative">
+                            <input onChange={e => toggleDimensions()} value={dimensionsToggled} type="checkbox" id="toggle-example-checked" className="sr-only" />
+                            <div className="toggle-bg mt-1 bg-gray-200 border border-gray-400 h-2 w-8 rounded-full"></div>
                         </label>
                     </div>
                     <button onClick={resetAnimation} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
@@ -200,21 +206,21 @@ const collection = () => {
                         <div>
                             {data.links.map((item) => (
                                 <div className={`${item.color} grid grid-cols-3 w-full`} key={item.tx}>
-                                    <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    <a className="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                         </svg>
                                         {item.tx ? `0x${item.tx.substring(0, 3)}...${item.tx.substring(item.tx.length - 3)}` : ''}
                                     </a>
                                     {item.source.id !== undefined ? (
                                         <div className="flex">
-                                            <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/address/${item.source.id}`}>
+                                            <a className="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/address/${item.source.id}`}>
                                                 {`0x${item.source.id.substring(0, 3)}...${item.source.id.substring(item.source.id.length - 3)}`}
                                             </a>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mx-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                             </svg>
-                                            <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/address/${item.target.id}`}>
+                                            <a className="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/address/${item.target.id}`}>
                                                 {`0x${item.target.id.substring(0, 3)}...${item.target.id.substring(item.target.id.length - 3)}`}
                                             </a>
                                         </div>
@@ -232,12 +238,12 @@ const collection = () => {
                 <div className="flex gap-4 mt-4 justify-between w-100">
                     <div>
                         <p className="-mb-1">Transfers</p>
-                        <p className="font-bold">192</p>
+                        <p className="font-bold">{stats !== null ? stats.links.length : 'loading...'}</p>
                     </div>
 
                     <div>
                         <p className="-mb-1">Unique addresses</p>
-                        <p className="font-bold">24</p>
+                        <p className="font-bold">{stats !== null ? [...new Map(stats.nodes.map(item =>[item.id, item])).values()].length : 'loading...'}</p>
                     </div>
 
                     <div>
