@@ -116,7 +116,7 @@ export function forceGraph(
     .append("g")
     .attr("stroke", "#cfcfcf")
     .attr("stroke-opacity", linkStrokeOpacity)
-    .attr("stroke-linecap", linkStrokeLinecap)
+    .attr("strokeLinecap", linkStrokeLinecap)
     .selectAll("line")
     .data(links)
     .join("line");
@@ -146,7 +146,7 @@ export function forceGraph(
     .append("circle")
     .attr("fill", nodeFill)
     .attr("stroke", "#fff")
-    .attr("stroke-width", 0.5)
+    .attr("strokeWidth", 0.5)
     .attr("r", 3)
     // .on('click', function(d, i) {
     //   window.open("https://etherscan.io/address/" + i.id, "_blank")
@@ -163,12 +163,12 @@ export function forceGraph(
       // nodeSelection.select("text").style({opacity:'1.0'});
   })
   
-  if (W) link.style("stroke-width", ({ index: i }) => {return 1 * WE[i];});
+  if (W) link.style("strokeWidth", ({ index: i }) => {return 1 * WE[i];});
   if (G) node.attr("fill", ({ index: i }) => color(G[i]));
   if (T) node.append("title").text(({ index: i }) => T[i]);
   if (invalidation != null) invalidation.then(() => simulation.stop());
 
-  // .style("stroke-width", function(d) { return "500"; })
+  // .style("strokeWidth", function(d) { return "500"; })
 
   function intern(value) {
     return value !== null && typeof value === "object"
