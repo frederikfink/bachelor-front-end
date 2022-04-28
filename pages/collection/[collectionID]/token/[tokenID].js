@@ -101,13 +101,18 @@ const collection = () => {
 
                 let from = link.source;
                 let to = link.target;
+                let color = 'text-red-500';
 
                 setData(({ nodes, links }) => {
+
                     if (!(nodes.some(e => e.id === from))) {
                         nodes = [...nodes, { id: from }];
+                        color = 'text-gray-500';
                     }
+
                     if (!(nodes.some(e => e.id === to))) {
                         nodes = [...nodes, { id: to }];
+                        color = 'text-gray-500';
                     }
 
                     let prevBlock = [...links].at(-1) !== undefined ? [...links].at(-1).block : 0
@@ -115,7 +120,7 @@ const collection = () => {
 
                     return {
                         nodes: nodes,
-                        links: [...links, { source: link.source, target: link.target, tx: link.tx, block: link.block, blockDiff: blockDiff }]
+                        links: [...links, { source: link.source, target: link.target, tx: link.tx, block: link.block, blockDiff: blockDiff, color: color }]
                     };
 
                 });
@@ -145,7 +150,7 @@ const collection = () => {
                 <div className="flex items-center">
                     {openseaData.image_url == undefined ? (
                         <div className="rounded-lg mr-4 bg-slate-200 force-120-px animate-pulse" />
-                    ): (
+                    ) : (
                         <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
                     )}
                     <div>
@@ -192,23 +197,35 @@ const collection = () => {
                 </div>
                 <div className="flex 3">
                     <div className="border border-gray-800 flex-1 border-l rounded-l-lg overflow-auto force-500px-height px-4 py-2">
-                        <ul>
+                        <div>
                             {data.links.map((item) => (
-                                <li className="text-gray-500 flex justify-between" key={item.tx}>
+                                <div className={`${item.color} grid grid-cols-3 w-full`} key={item.tx}>
                                     <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
-                                        tx
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        {item.tx ? `0x${item.tx.substring(0, 3)}...${item.tx.substring(item.tx.length - 3)}` : ''}
                                     </a>
-                                    <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
-                                        {item.source.id ? `0x${item.source.id.substring(0, 3)}...${item.target.id.substring(item.source.id.length - 3)}` : ''}
-                                    </a>
-                                    <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
-                                        {item.target.id ? `0x${item.target.id.substring(0, 3)}...${item.target.id.substring(item.target.id.length - 3)}` : ''}
-                                    </a>
-                                    <p>{item.blockDiff}</p>
-                                </li>
+                                    {item.source.id !== undefined ? (
+                                        <div className="flex">
+                                            <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/address/${item.source.id}`}>
+                                                {`0x${item.source.id.substring(0, 3)}...${item.source.id.substring(item.source.id.length - 3)}`}
+                                            </a>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                            </svg>
+                                            <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/address/${item.target.id}`}>
+                                                {`0x${item.target.id.substring(0, 3)}...${item.target.id.substring(item.target.id.length - 3)}`}
+                                            </a>
+                                        </div>
+                                    ) : (
+                                        <div></div>
+                                    )}
+                                    <p className="text-right">{item.blockDiff}</p>
+                                </div>
                             ))}
                             <AlwaysScrollToBottom />
-                        </ul>
+                        </div>
                     </div>
                     <FocusGraph data={data} dimensions={dimensions} />
                 </div>
