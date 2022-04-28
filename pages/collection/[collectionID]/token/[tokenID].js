@@ -22,18 +22,49 @@ const collection = () => {
     const [animationSpeed, setAnimationSpeed] = useState(50)
     const [dimensions, setDimensions] = useState(2)
     const [dimensionsToggled, setDimensionsToggled] = useState(false)
+    const [openseaData, setOpenseaData] = useState({});
+
+    const getShortHash = (val, len, dir) => {
+        if(dir == 'reverse') return val.substring(val.length - len)
+        else return val.substring(0, len)
+    }
 
     const toggleDimensions = async () => {
-        if(dimensions == 2) setDimensions(3);
+        if (dimensions == 2) setDimensions(3);
         else setDimensions(2);
         setDimensionsToggled(!dimensionsToggled);
     }
 
     const resetAnimation = async () => {
+        console.log(data);
         setData({ nodes: [], links: [] });
         setAnimationSpeed(50);
         setAnimationRunning(false);
     }
+
+    const fetchData = async () => {
+
+        try {
+            console.log(collectionID);
+            const response = await fetch(`https://api.opensea.io/api/v1/asset/${collectionID}/${tokenID}/?include_orders=false`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // let result = await response.json();
+            // setOpenseaData(JSON.parse(JSON.stringify(result)));
+
+            setOpenseaData(await response.json());
+
+            console.log(openseaData);
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    };
 
     const startAnimation = async () => {
         resetAnimation()
@@ -74,9 +105,8 @@ const collection = () => {
 
                     return {
                         nodes: nodes,
-                        links: [...links, { source: link.source, target: link.target }]
+                        links: [...links, { source: link.source, target: link.target, tx: link.tx }]
                     };
-
 
                 });
 
@@ -92,13 +122,23 @@ const collection = () => {
 
     }
 
+    useEffect(() => {
+        fetchData();
+    }, [collectionID]);
+
     return (
         <>
             <Header />
             <NextBreadcrumbs />
 
             <div className="container m-auto">
-                <h1 className="text-xl mb-4 font-mono">{collectionID} | <span className="text-xl font-mono font-bold">{tokenID}</span></h1>
+                <div className="flex items-center">
+                    <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
+                    <div>
+                        <h1 className="text-xl font-semibold">{openseaData.name}</h1>
+                        <p className="text-gray-700 dark:text-gray-400">{collectionID} | {tokenID}</p>
+                    </div>
+                </div>
 
                 <div className="flex justify-between items-center gap-4 mb-4">
                     <button disabled={animationRunning} onClick={startAnimation} type="button" className="inline-flex items-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">
@@ -131,21 +171,28 @@ const collection = () => {
                         <label for="toggle-example-checked" class="flex mb-4 items-center cursor-pointer relative">
                             <input onChange={e => toggleDimensions()} value={dimensionsToggled} type="checkbox" id="toggle-example-checked" class="sr-only" />
                             <div class="toggle-bg mt-1 bg-gray-200 border border-gray-400 h-2 w-8 rounded-full"></div>
-                            </label>
+                        </label>
                     </div>
                     <button onClick={resetAnimation} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-1 bg-blue-600 text-base text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:bg-gray-500">Reset</button>
 
                 </div>
                 <div className="flex 3">
                     <div className="border border-gray-800 flex-fill w-100 flex-1 border-l rounded-l-lg overflow-auto force-500px-height px-4 py-2">
-                        {data.nodes.map((item) => (
-                            <li className="text-gray-500 flex justify-between" key={item.id}>
-                                <a target={"_BLANK"} href={`https://etherscan.io/address/${item.id}`}>0x{item.id.substring(0, 3)}...{item.id.substring(item.id.length - 3)}</a>
-                                <p>20-20-2022</p>
+                        {data.links.map((item) => (
+                            <li className="text-gray-500 flex justify-between" key={item.tx}>
+                                <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
+                                    tx
+                                </a>
+                                <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
+                                    {item.source.id ? `0x${item.source.id.substring(0, 3)}...${item.target.id.substring(item.source.id.length - 3)}` : ''}
+                                </a>
+                                <a class="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
+                                    {item.target.id ? `0x${item.target.id.substring(0, 3)}...${item.target.id.substring(item.target.id.length - 3)}` : ''}
+                                </a>
                             </li>
                         ))}
                     </div>
-                    <FocusGraph data={data} dimensions={dimensions}/>
+                    <FocusGraph data={data} dimensions={dimensions} />
                 </div>
                 <div className="flex gap-4 mt-4 justify-between w-100">
                     <div>
