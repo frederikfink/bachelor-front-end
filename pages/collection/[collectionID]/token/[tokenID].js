@@ -90,6 +90,8 @@ const collection = () => {
 
             const result = await response.json()
 
+            console.log(result.graph);
+
             result.links.sort((a, b) => (a.block < b.block) ? 1 : -1)
 
 
@@ -133,7 +135,6 @@ const collection = () => {
 
             }, animationSpeed);
 
-
         } catch (error) {
             console.log(error);
             setAnimationRunning(false);
@@ -155,7 +156,7 @@ const collection = () => {
             <div className="container m-auto">
                 <div className="flex items-center">
                     {openseaData.image_url == undefined ? (
-                        <div className="rounded-lg mr-4 bg-slate-200 force-120-px animate-pulse" />
+                        <div className="rounded-lg mr-4 bg-slate-200 dark:bg-slate-700 force-120-px animate-pulse" />
                     ) : (
                         <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
                     )}

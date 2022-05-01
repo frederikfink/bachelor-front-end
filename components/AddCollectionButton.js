@@ -9,11 +9,12 @@ const AddCollectionButton = () => {
     const [loading, setLoading] = useState(false);
     const [isDisabled, setDisabled] = useState(true);
     const [suggestedCollection, setSuggestedCollection] = useState(null);
+    const [errorMsg, setErorrMsg] = useState('');
 
 
 
     const submitCollection = async () => {
-
+        setErorrMsg('')
         setLoading(true);
 
         try {
@@ -30,11 +31,14 @@ const AddCollectionButton = () => {
             console.log(data)
 
         } catch (error) {
+            setErorrMsg('Failed to add collection, please try again.')
             console.log(error);
         }
+        setLoading(false);
     }
 
     const handleContractChange = async (value) => {
+        setErorrMsg('')
         setCollection(value);
 
         if (value.length === 42) {
@@ -94,7 +98,10 @@ const AddCollectionButton = () => {
                                         <input onChange={(e) => { handleContractChange(e.target.value) }} className="w-full mt-4 border-b focus:ring-0 outline-0 font-mono dark:bg-white dark:text-black text-sm" placeholder="contract address goes here..."></input>
                                         {suggestedCollection !== null ? (
                                             <p className="text-sm text-gray-500 mt-2">found collection | <span className="font-bold">{suggestedCollection}</span></p>
-                                        ) : ( '')}
+                                        ) : ('')}
+                                        {errorMsg !== '' ? (
+                                            <p className="text-red-500">{errorMsg}</p>
+                                        ) : ('')}
                                     </div>
                                 </div>
                             </div>

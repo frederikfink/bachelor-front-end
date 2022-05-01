@@ -45,13 +45,16 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
     }, [collectionID]);
 
     console.log(openseaData);
-    
+
     return (
         <>
             <div className="flex mb-4">
-                <div className="flex items-center">
-                    <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
-                    <div>
+                <div className="flex items-center"> 
+                    {openseaData.image_url == undefined ? (
+                        <div className="rounded-lg mr-4 bg-slate-200 dark:bg-slate-700 force-120-px animate-pulse" />
+                    ) : (
+                        <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
+                    )}                    <div>
                         <h1 className="text-xl font-semibold">{openseaData.name}</h1>
                         <p className="text-gray-700 dark:text-gray-400">{tableTitle}</p>
                     </div>
