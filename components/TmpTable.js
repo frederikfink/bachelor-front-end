@@ -71,6 +71,9 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
                                 Transfers
                             </th>
                             <th scope="col" className="px-6 py-3">
+                                Unique addresses
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 avg. transfer speed
                             </th>
                             <th scope="col" className="px-6 py-3">
@@ -92,7 +95,10 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
                                     {elem.count}
                                 </th>
                                 <td className="px-6 py-4">
-                                    placeholder
+                                    {elem.unique_addresses}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {elem.block_avg}
                                 </td>
                                 <td className="px-6 py-4">
                                     placeholder
