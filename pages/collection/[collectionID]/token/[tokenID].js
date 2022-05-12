@@ -21,6 +21,7 @@ const collection = () => {
     const [openseaData, setOpenseaData] = useState({});
     const [stats, setStats] = useState(null);
     const [tokenStats, setTokenStats] = useState(null);
+    const [collectionStats, setCollectionStats] = useState(null);
 
     const AlwaysScrollToBottom = () => {
         const elementRef = useRef();
@@ -74,6 +75,22 @@ const collection = () => {
         }
     }
 
+    const fetchCollectionStats = async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/collection/${collectionID}/stats`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            setCollectionStats(await response.json(data));
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const fetchTokenStats = async () => {
         try {
             const response = await fetch(`http://127.0.0.1:5000/collection/${collectionID}/token/${tokenID}/stats`, {
@@ -88,6 +105,21 @@ const collection = () => {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const calcPercentageDiff = (b, a, lower_mark = 0, upper_mark = 0) => {
+        // if(a == 0) return "";
+        let diff = (100 * ((a - b) / b)).toFixed(1);
+        if (diff < lower_mark) return <span className="text-red-500 flex"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 13l-5 5m0 0l-5-5m5 5V6" />
+        </svg>{diff} %</span>
+        if (diff > upper_mark) return <span className="text-red-500 flex"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7 11l5-5m0 0l5 5m-5-5v12" />
+        </svg>{diff} %</span>
+        return <span className="text-gray-500 flex"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>{diff} %</span>
+        // return (100 * ((a-b)/b)).toFixed(1);
     }
 
     const startAnimation = async () => {
@@ -169,6 +201,7 @@ const collection = () => {
         fetchData();
         fetchStats();
         fetchTokenStats();
+        fetchCollectionStats();
     }, [collectionID, tokenID]);
 
     return (
@@ -296,7 +329,9 @@ const collection = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
                         ) : (
-                            <p className="font-bold">{tokenStats.cycle_count}</p>
+                            <p className="font-bold">
+                                {tokenStats.cycle_count}
+                            </p>
                         )}
                     </div>
 
@@ -307,7 +342,10 @@ const collection = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
                         ) : (
-                            <p className="font-bold">{tokenStats.block_diff_average.toFixed(2)}</p>
+                            <p className="font-bold">
+                                {tokenStats.block_diff_average.toFixed(2)}
+                                {collectionStats == null ? ("loading") : (calcPercentageDiff(collectionStats.block_diff_average, tokenStats.block_diff_average, -60, 100))}
+                            </p>
                         )}
                     </div>
 
@@ -318,7 +356,10 @@ const collection = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
                         ) : (
-                            <p className="font-bold">{tokenStats.block_diff_std.toFixed(2)}</p>
+                            <p className="font-bold">
+                                {tokenStats.block_diff_std.toFixed(2)}
+                                {collectionStats == null ? ("loading") : (calcPercentageDiff(collectionStats.block_diff_std, tokenStats.block_diff_std, -60, 100))}
+                            </p>
                         )}
                     </div>
                 </div>
