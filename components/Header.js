@@ -39,7 +39,7 @@ const Header = () => {
                 {renderThemeChanger()}
             </div>
         </header>
-        <div className="h-24 spaceer"></div>
+        <div className="h-24 spacer"></div>
         </>
     );
 };

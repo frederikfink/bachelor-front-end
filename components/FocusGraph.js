@@ -12,6 +12,10 @@ const FocusGraph = (data, dimensions) => {
   const [clickHistory, setClickHistory] = useState([])
   const [clicked, setClicked] = useState([])
 
+  const handleNodeHover = node => {
+    console.log(node)
+  };
+
   return (
     (data.data.length == 0) ? (
       <p>loading...</p>
@@ -28,8 +32,9 @@ const FocusGraph = (data, dimensions) => {
             ref={fgRef}
             graphData={data.data}
             nodeLabel="id"
-            linkDirectionalArrowLength={6}
+            linkDirectionalArrowLength={4}
             linkLabel="id"
+            linkCurvature="curvature"
             width={700}
             height={500}
             cooldownTime={1000}
@@ -52,12 +57,14 @@ const FocusGraph = (data, dimensions) => {
             linkWidth={link => link.weight}
             linkColor={link => '#3b82f6'}
             nodeColor={node => '#cfcfcf'}
+            linkCurvature="curvature"
             nodeStr
             d3Force="charge"
             ref={fgRef}
             graphData={data.data}
+            onNodeHover={handleNodeHover}
             nodeLabel="id"
-            linkDirectionalArrowLength={14}
+            linkDirectionalArrowLength={4}
             linkLabel="id"
             width={700}
             height={500}

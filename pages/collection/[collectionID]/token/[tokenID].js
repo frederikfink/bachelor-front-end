@@ -24,6 +24,7 @@ const collection = () => {
     const [dimensionsToggled, setDimensionsToggled] = useState(false)
     const [openseaData, setOpenseaData] = useState({});
     const [stats, setStats] = useState(null);
+    const [tokenStats, setTokenStats] = useState(null);
 
     const AlwaysScrollToBottom = () => {
         const elementRef = useRef();
@@ -77,6 +78,22 @@ const collection = () => {
         }
     }
 
+    const fetchTokenStats = async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/collection/${collectionID}/token/${tokenID}/stats`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            setTokenStats(await response.json());
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const startAnimation = async () => {
         setData({ nodes: [], links: [] });
         setAnimationRunning(true);
@@ -105,17 +122,21 @@ const collection = () => {
                 let from = link.source;
                 let to = link.target;
                 let color = 'text-red-500';
+                let curvature = (Math.random() * (0.1 - 0.9) + 0.9).toFixed(2);
+
 
                 setData(({ nodes, links }) => {
 
                     if (!(nodes.some(e => e.id === from))) {
                         nodes = [...nodes, { id: from }];
                         color = 'text-gray-500';
+                        curvature = 0;
                     }
 
                     if (!(nodes.some(e => e.id === to))) {
                         nodes = [...nodes, { id: to }];
                         color = 'text-gray-500';
+                        curvature = 0;
                     }
 
                     let prevBlock = [...links].at(-1) !== undefined ? [...links].at(-1).block : 0
@@ -123,7 +144,15 @@ const collection = () => {
 
                     return {
                         nodes: nodes,
-                        links: [...links, { source: link.source, target: link.target, tx: link.tx, block: link.block, blockDiff: blockDiff, color: color }]
+                        links: [...links, {
+                            source: link.source,
+                            target: link.target,
+                            tx: link.tx,
+                            block: link.block,
+                            blockDiff: blockDiff,
+                            color: color,
+                            curvature: curvature
+                        }]
                     };
 
                 });
@@ -143,6 +172,7 @@ const collection = () => {
         if (!collectionID) return;
         fetchData();
         fetchStats();
+        fetchTokenStats();
     }, [collectionID, tokenID]);
 
     return (
@@ -247,28 +277,55 @@ const collection = () => {
                 <div className="flex gap-4 mt-4 justify-between w-100">
                     <div>
                         <p className="-mb-1">Transfers</p>
-                        <p className="font-bold">{stats !== null ? stats.links.length : 'loading...'}</p>
+                        <p className="font-bold">{stats !== null ? stats.links.length : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        )}</p>
                     </div>
 
                     <div>
                         <p className="-mb-1">Unique addresses</p>
-                        <p className="font-bold">{stats !== null ? [...new Map(stats.nodes.map(item => [item.id, item])).values()].length : 'loading...'}</p>
+                        <p className="font-bold">{stats !== null ? [...new Map(stats.nodes.map(item => [item.id, item])).values()].length : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        )}</p>
                     </div>
 
                     <div>
                         <p className="-mb-1">Cycles</p>
-                        <p className="font-bold">not implemented</p>
+                        {tokenStats == null ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        ) : (
+                            <p className="font-bold">{tokenStats.cycle_count}</p>
+                        )}
                     </div>
 
                     <div>
-                        <p className="-mb-1">avg blocks between transfers</p>
-                        <p className="font-bold">not implemented</p>
+                        <p className="-mb-1">Block Diff <span className="font-mono">AVG</span></p>
+                        {tokenStats == null ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        ) : (
+                            <p className="font-bold">{tokenStats.block_diff_average.toFixed(2)}</p>
+                        )}
                     </div>
 
                     <div>
-                        <p className="-mb-1">Median blocks between transfers</p>
-                        <p className="font-bold">not impelemnted</p>
+                        <p className="-mb-1">Block Diff <span className="font-mono">STD</span></p>
+                        {tokenStats == null ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        ) : (
+                            <p className="font-bold">{tokenStats.block_diff_std.toFixed(2)}</p>
+                        )}
                     </div>
+
                 </div>
             </div>
         </>

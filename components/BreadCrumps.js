@@ -36,7 +36,7 @@ export default function NextBreadcrumbs() {
 
     return (
         <div className="container m-auto">
-            <div className="flex gap-3 items-center mb-4">
+            <div className="flex gap-3 items-center mb-6">
                 {breadcrumbs.map((crumb, idx) => (
                     <Crumb {...crumb} key={idx} last={idx === breadcrumbs.length - 1} />
                 ))}

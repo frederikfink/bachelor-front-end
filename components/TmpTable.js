@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Tooltip } from "./Tooltip";
 
 
-const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
+const TmpTable = ({ tableTitle, collectionData, collectionID, collectionStats }) => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -13,6 +13,15 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
     const [isDisabled, setDisabled] = useState(true);
 
     const [openseaData, setOpenseaData] = useState({});
+
+    const calcPercentageDiff = (a, b, lower_mark = 0, upper_mark = 0) => {
+        // if(a == 0) return "";
+        let diff = (100 * ((a-b)/b)).toFixed(1);
+        if(diff < lower_mark) return <span className="text-red-500">{diff} %</span>
+        if(diff > upper_mark) return <span className="text-red-500">{diff} %</span>
+        return                       <span className="text-gray-500">{diff} %</span>
+        // return (100 * ((a-b)/b)).toFixed(1);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,16 +51,16 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
         if (!collectionID) return;
 
         fetchData();
-    }, [collectionID]);
+    }, [collectionData]);
 
     console.log(openseaData);
 
     return (
         <>
             <div className="flex mb-4">
-                <div className="flex items-center"> 
+                <div className="flex items-center">
                     {openseaData.image_url == undefined ? (
-                        <div className="rounded-lg mr-4 bg-slate-200 dark:bg-slate-700 force-120-px animate-pulse" />
+                        <div className="rounded-lg mr-4 bg-gray-200 dark:bg-gray-700 force-120-px animate-pulse" />
                     ) : (
                         <img src={openseaData.image_url} width="120px" height="120px" className="rounded-lg mr-4" />
                     )}                    <div>
@@ -71,10 +80,10 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
                                 Transfers
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Unique addresses
+                                Block diff avg
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                avg. transfer speed
+                                Block diff std
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 cycles
@@ -92,16 +101,27 @@ const TmpTable = ({ tableTitle, collectionData, collectionID }) => {
                                     </Link>
                                 </th>
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {elem.count}
+                                    {elem.transfer_count}
                                 </th>
                                 <td className="px-6 py-4">
-                                    {elem.unique_addresses}
+                                    {elem.block_diff_average == 0 ? (
+                                        <span>-</span>
+                                    ) : (
+                                        <span className="truncate font-mono">{(elem.block_diff_average).toFixed(1)} ({calcPercentageDiff(elem.block_diff_average, collectionStats.block_diff_average, -60, 100)})</span>
+                                    )}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {elem.block_avg}
+                                    {elem.block_diff_std == 0 ? (
+                                        <span>-</span>
+                                    ) : (
+                                        <span className="truncate font-mono">{(elem.block_diff_std).toFixed(1)} ({calcPercentageDiff(elem.block_diff_std, collectionStats.block_diff_std, -60, 100)})</span>
+                                        
+                                    )}
                                 </td>
-                                <td className="px-6 py-4">
-                                    placeholder
+                                <td scope="row" className="px-6 py-4 text-gray-900 dark:text-white whitespace-nowrap">
+                                    {elem.cycle_count > 10 ? (
+                                        <span className="text-red-500 font-bold">{elem.cycle_count} {elem.cycle_count > 50 ? "❗️" : ""}</span>
+                                    ) : ( elem.cycle_count )}
                                 </td>
                             </tr>
                         ))}
