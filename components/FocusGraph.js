@@ -1,16 +1,11 @@
 // import dynamic from "next/dynamic";
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import ForceGraph, { ForceGraph2D, ForceGraph3D, ForceGraphMethods } from "react-force-graph";
-import NodeInfoBox from "./nodeInfoBox";
-import { useTheme } from "next-themes";
+import React, { useRef } from "react";
+import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 
 
 const FocusGraph = (data, dimensions) => {
 
-  const { theme } = useTheme();
   const fgRef = useRef();
-  const [clickHistory, setClickHistory] = useState([])
-  const [clicked, setClicked] = useState([])
 
   const handleNodeHover = node => {
     console.log(node)

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Image from 'next/image'
 import Link from 'next/link'
-import { Tooltip } from "./Tooltip";
 
 
 const TmpTable = ({ tableTitle, collectionData, collectionID, collectionStats }) => {

@@ -1,8 +1,5 @@
 import Link from 'next/link'
 import AddCollectionButton from "./AddCollectionButton";
-import { Tooltip } from './Tooltip';
-
-
 
 const Table = ({ tableTitle, collectionData }) => {
 

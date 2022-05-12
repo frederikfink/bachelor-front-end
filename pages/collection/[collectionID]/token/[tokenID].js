@@ -1,14 +1,10 @@
 
 // Importing useRouter()
-import Link from 'next/link'
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from 'next/router'
 import FocusGraph from "../../../../components/FocusGraphWrapper";
 import Header from '../../../../components/Header';
-import { link } from 'd3';
-import { timeout } from 'd3';
 import NextBreadcrumbs from '../../../../components/BreadCrumps';
-import { utcFormat } from 'd3';
 
 const collection = () => {
 
@@ -243,8 +239,8 @@ const collection = () => {
                 <div className="flex 3">
                     <div className="border border-gray-800 flex-1 border-l rounded-l-lg overflow-auto force-500px-height px-4 py-2">
                         <div>
-                            {data.links.map((item) => (
-                                <div className={`${item.color} grid grid-cols-3 w-full`} key={item.tx}>
+                            {data.links.map((item, i) => (
+                                <div className={`${item.color} grid grid-cols-3 w-full`} key={item.tx + i}>
                                     <a className="flex truncate font-mono items-center" target={"_BLANK"} href={`https://etherscan.io/tx/${item.tx}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -325,7 +321,6 @@ const collection = () => {
                             <p className="font-bold">{tokenStats.block_diff_std.toFixed(2)}</p>
                         )}
                     </div>
-
                 </div>
             </div>
         </>
