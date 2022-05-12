@@ -28,7 +28,6 @@ const TmpTable = ({ tableTitle, collectionData, collectionID, collectionStats })
             setIsLoading(true);
 
             try {
-                console.log(collectionID);
                 const response = await fetch(`https://api.opensea.io/api/v1/asset_contract/${collectionID}`, {
                     method: 'GET',
                     headers: {
@@ -52,8 +51,6 @@ const TmpTable = ({ tableTitle, collectionData, collectionID, collectionStats })
 
         fetchData();
     }, [collectionData]);
-
-    console.log(openseaData);
 
     return (
         <>

@@ -14,6 +14,7 @@ const FocusGraph = (data, dimensions) => {
 
   const handleNodeHover = node => {
     console.log(node)
+    // implement some highlighting features
   };
 
   return (

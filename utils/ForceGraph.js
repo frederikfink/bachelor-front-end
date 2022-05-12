@@ -154,12 +154,9 @@ export function forceGraph(
     // })
     .on('mouseover', function(d, i ){
       let nodeSelection = (this);
-      console.log(i);
-      console.log(this);
       d3.select(".test_div")
         .style('background-color', 'orange')
         .text(i.id);
-      console.log(d3.select(".test_div"))
       // nodeSelection.select("text").style({opacity:'1.0'});
   })
   

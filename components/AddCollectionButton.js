@@ -28,8 +28,6 @@ const AddCollectionButton = () => {
 
             const data = await response.json(data)
 
-            console.log(data)
-
         } catch (error) {
             setErorrMsg('Failed to add collection, please try again.')
             console.log(error);
