@@ -64,7 +64,15 @@ const All = () => {
         <div className="flex gap-4 mt-4 justify-between w-100 mb-4 border rounded-lg p-4 dark:border-gray-600">
           <div>
             <p className="mb-0 dark:text-gray-400">Collection Age</p>
-            <p className="font-bold">{stats !== null ? (stats.start_block + " -> " + stats.latest_block) : (
+            <p className="font-bold">{stats !== null ? (
+              <div className="flex gap-2">
+                {stats.start_block}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+                {stats.latest_block}
+              </div>
+            ) : (
               <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>

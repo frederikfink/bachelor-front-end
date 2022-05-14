@@ -60,7 +60,7 @@ const FocusGraph = (data, dimensions) => {
             graphData={data.data}
             onNodeHover={handleNodeHover}
             nodeLabel="id"
-            linkDirectionalArrowLength={4}
+            linkDirectionalArrowLength={8}
             linkLabel="id"
             width={700}
             height={500}
